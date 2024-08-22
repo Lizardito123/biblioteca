@@ -1,3 +1,4 @@
+<?php include('header.php'); ?>
 <?php
 $conexion = new mysqli("localhost", "root", "", "bibli");
 
@@ -10,16 +11,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $correo = $_POST["correo"];
     $telefono = $_POST["telefono"];
     $fecha_contratacion = $_POST["fecha_contratacion"];
+    $password = password_hash($_POST["password"], PASSWORD_BCRYPT); // Encriptar la contraseña
 
-    $sql = "INSERT INTO Empleados (nombre, correo, telefono, fecha_contratacion)
-            VALUES ('$nombre', '$correo', '$telefono', '$fecha_contratacion')";
+    $sql = "INSERT INTO Empleados (nombre, correo, telefono, fecha_contratacion, password)
+            VALUES ('$nombre', '$correo', '$telefono', '$fecha_contratacion', '$password')";
 
     if ($conexion->query($sql) === TRUE) {
-        echo "Nuevo empleado registrado con éxito";
+        echo "Empleado registrado con éxito.";
     } else {
-        echo "Error: " . $sql . "<br>" . $conexion->error;
+        echo "Error: " . $conexion->error;
     }
 }
+
+// Obtener la lista de empleados
+$sql_empleados = "SELECT id_empleado, nombre, correo, telefono, fecha_contratacion FROM Empleados";
+$resultado_empleados = $conexion->query($sql_empleados);
 ?>
 
 <!DOCTYPE html>
@@ -44,7 +50,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <label for="fecha_contratacion">Fecha de Contratación:</label>
         <input type="date" id="fecha_contratacion" name="fecha_contratacion" required><br>
 
+        <label for="password">Contraseña:</label>
+        <input type="password" id="password" name="password" required><br>
+
         <input type="submit" value="Registrar Empleado">
     </form>
+
+    <h2>Lista de Empleados</h2>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Correo</th>
+            <th>Teléfono</th>
+            <th>Fecha de Contratación</th>
+        </tr>
+        <?php
+        if ($resultado_empleados->num_rows > 0) {
+            while ($fila = $resultado_empleados->fetch_assoc()) {
+                echo "<tr>";
+                echo "<td>" . $fila["id_empleado"] . "</td>";
+                echo "<td>" . $fila["nombre"] . "</td>";
+                echo "<td>" . $fila["correo"] . "</td>";
+                echo "<td>" . $fila["telefono"] . "</td>";
+                echo "<td>" . $fila["fecha_contratacion"] . "</td>";
+                echo "</tr>";
+            }
+        } else {
+            echo "<tr><td colspan='5'>No hay empleados registrados.</td></tr>";
+        }
+        ?>
+    </table>
 </body>
 </html>

@@ -10,15 +10,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $correo = $_POST["correo"];
     $password = $_POST["password"];
 
-    $sql = "SELECT id_empleado FROM Empleados WHERE correo = '$correo' AND password = '$password'";
-    $resultado = $conexion->query($sql);
+    // Consultar el empleado por correo
+    $sql = "SELECT id_empleado, nombre, password FROM Empleados WHERE correo = ?";
+    $stmt = $conexion->prepare($sql);
+    $stmt->bind_param("s", $correo);
+    $stmt->execute();
+    $resultado = $stmt->get_result();
 
-    if ($resultado->num_rows > 0) {
-        $_SESSION['loggedin'] = true;
-        $_SESSION['id_empleado'] = $resultado->fetch_assoc()['id_empleado'];
-        header("Location: index.php");
+    if ($resultado->num_rows == 1) {
+        $empleado = $resultado->fetch_assoc();
+        // Verificar la contraseña
+        if (password_verify($password, $empleado['password'])) {
+            // Inicio de sesión exitoso
+            $_SESSION["loggedin"] = true;
+            $_SESSION["id_empleado"] = $empleado["id_empleado"];
+            $_SESSION["nombre"] = $empleado["nombre"];
+            header("Location: index.php"); // Redirigir a la página principal
+            exit();
+        } else {
+            $error = "Correo o contraseña incorrectos.";
+        }
     } else {
-        echo "Correo o contraseña incorrectos.";
+        $error = "Correo o contraseña incorrectos.";
     }
 }
 ?>
@@ -28,10 +41,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio de Sesión</title>
+    <title>Iniciar Sesión</title>
 </head>
 <body>
-    <h1>Inicio de Sesión de Empleados</h1>
+    <h1>Iniciar Sesión</h1>
+    <?php if (isset($error)) { echo "<p>$error</p>"; } ?>
     <form method="post" action="login.php">
         <label for="correo">Correo:</label>
         <input type="email" id="correo" name="correo" required><br>

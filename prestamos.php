@@ -1,4 +1,4 @@
-<?php include('header.php'); ?>
+
 <?php
 $conexion = new mysqli("localhost", "root", "", "bibli");
 
@@ -9,7 +9,7 @@ if ($conexion->connect_error) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_cliente = $_POST["id_cliente"];
     $id_libro = $_POST["id_libro"];
-    $cantidad_prestamo = $_POST["cantidad_prestamo"];
+    $cantidad_prestamo = isset($_POST["cantidad_prestamo"]) ? (int)$_POST["cantidad_prestamo"] : 0;  // Asegurarse de que la cantidad esté definida y sea un número entero.
     $fecha_prestamo = date("Y-m-d");
 
     // Verificar disponibilidad del libro
@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $resultado = $conexion->query($sql_libro);
     $libro = $resultado->fetch_assoc();
 
-    if ($libro['cantidad_disponible'] >= $cantidad_prestamo) {
+    if ($libro['cantidad_disponible'] >= $cantidad_prestamo && $cantidad_prestamo > 0) {
         // Registrar préstamo
         $sql_prestamo = "INSERT INTO Prestamos (id_cliente, id_libro, fecha_prestamo)
                          VALUES ('$id_cliente', '$id_libro', '$fecha_prestamo')";
@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "Error: " . $conexion->error;
         }
     } else {
-        echo "Lo siento, no hay suficientes copias disponibles de este libro.";
+        echo "Lo siento, no hay suficientes copias disponibles de este libro o la cantidad solicitada es inválida.";
     }
 }
 
