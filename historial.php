@@ -59,7 +59,7 @@ $resultado_historial = $conexion->query($sql_historial);
                         ?>
                     </tbody>
                 </table>
-                <form action="index.php">
+                <form action="login.php">
                     <div class="col-6">
                         <br><button type="submit" class="btn btn-secondary btn-block"> <- Volver</button><br>
                     </div>

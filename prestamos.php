@@ -120,7 +120,7 @@ $resultado_libros = $conexion->query($sql_libros);
 
                     <button type="submit" class="btn btn-primary">Registrar Préstamo</button>
                 </form>
-                <form action="index.php">
+                <form action="login.php">
                     <div class="col-6">
                         <br><button type="submit" class="btn btn-secondary btn-block"> <- Volver</button>
                         <br>

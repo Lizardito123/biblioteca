@@ -6,13 +6,13 @@ if ($conexion->connect_error) {
 }
 
 // Manejar eliminación de cliente
-if (isset($_GET['eliminar'])) {
+if (isset($_GET['eliminar']) && is_numeric($_GET['eliminar'])) {
     $id_cliente = $conexion->real_escape_string($_GET['eliminar']);
     $sql_eliminar = "DELETE FROM Clientes WHERE id_cliente = $id_cliente";
 
     if ($conexion->query($sql_eliminar) === TRUE) {
-        // Redirigir a editar_cliente.php después de eliminar
-        header("Location: editar_cliente.php?id_cliente=$id_cliente");
+        // Redirigir a la misma página después de eliminar
+        header("Location: clientes.php");
         exit();
     } else {
         echo "<div class='alert alert-danger'>Error al eliminar cliente: " . $conexion->error . "</div>";
@@ -60,8 +60,7 @@ $resultado_clientes = $conexion->query($sql_clientes);
                                     <td>{$fila['telefono']}</td>
                                     <td>
                                         <a href='editar_cliente.php?id_cliente={$fila['id_cliente']}' class='btn btn-warning'>Editar</a>
-                                        <a href='clientes.php?eliminar={$fila['id_cliente']}' class='btn btn-danger' onclick='return confirm(\"¿Estás seguro de que quieres eliminar este cliente?\");'>Eliminar</a>
-                                    </td>
+                                        </td>
                                 </tr>";
                             }
                         } else {
@@ -70,7 +69,7 @@ $resultado_clientes = $conexion->query($sql_clientes);
                         ?>
                     </tbody>
                 </table>
-                <form action="index.php">
+                <form action="login.php">
                     <div class="col-6">
                         <br><button type="submit" class="btn btn-secondary btn-block"> <- Volver</button><br>
                     </div>

@@ -58,8 +58,7 @@ $resultado_libros = $conexion->query($sql_libros);
                                     <td>{$fila['cantidad_disponible']}</td>
                                     <td>
                                         <a href='editarL.php?id_libro={$fila['id_libro']}' class='btn btn-warning'>Editar</a>
-                                        <a href='libros.php?eliminar={$fila['id_libro']}' class='btn btn-danger' onclick='return confirm(\"¿Estás seguro de que quieres eliminar este libro?\");'>Eliminar</a>
-                                    </td>
+                                         </td>
                                 </tr>";
                             }
                         } else {
@@ -68,7 +67,7 @@ $resultado_libros = $conexion->query($sql_libros);
                         ?>
                     </tbody>
                 </table>
-                <form action="index.php">
+                <form action="login.php">
                     <div class="col-6">
                         <br><button type="submit" class="btn btn-secondary btn-block"> <- Volver</button><br>
                     </div>

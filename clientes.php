@@ -61,7 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     <button type="submit" class="btn btn-primary">Registrar Cliente</button>
                 </form>
-                <form action="index.php">
+                <form action="login.php">
                     <div class="col-6">
                         <br><button type="submit" class="btn btn-secondary btn-block"> <- Volver</button>
                         <br>

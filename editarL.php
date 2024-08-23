@@ -23,21 +23,7 @@ if (isset($_GET['id_libro'])) {
     exit();
 }
 
-// Manejar actualización del libro
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $id_libro = $conexion->real_escape_string($_POST["id_libro"]);
-    $titulo = $conexion->real_escape_string($_POST["titulo"]);
-    $autor = $conexion->real_escape_string($_POST["autor"]);
-    $cantidad_disponible = (int)$_POST["cantidad_disponible"];
 
-    $sql_actualizar = "UPDATE Libros SET titulo='$titulo', autor='$autor', cantidad_disponible=$cantidad_disponible WHERE id_libro=$id_libro";
-
-    if ($conexion->query($sql_actualizar) === TRUE) {
-        echo "<div class='alert alert-success'>Libro actualizado con éxito.</div>";
-    } else {
-        echo "<div class='alert alert-danger'>Error al actualizar libro: " . $conexion->error . "</div>";
-    }
-}
 ?>
 
 <!doctype html>
@@ -55,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="card col-sm-4" style="margin-top: 7%;">
             <div class="card-body login-card-body">
                 <h3 class="card-title">Editar Libro</h3>
-                <form method="post" action="editarL.php">
+                <form method="post" action="uno.php">
                     <input type="hidden" name="id_libro" value="<?php echo $libro['id_libro']; ?>">
                     <div class="mb-3">
                         <label for="titulo" class="form-label">Título:</label>

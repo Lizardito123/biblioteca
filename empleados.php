@@ -84,7 +84,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
             </form>
 
-            <form action="login.php" class="text-center mt-3">
+            <form action="index.php" class="text-center mt-3">
                 <button type="submit" class="btn btn-secondary">Volver</button>
             </form>
         </div>
