@@ -1,4 +1,3 @@
-<?php include('header.php'); ?>
 <?php
 $conexion = new mysqli("localhost", "root", "", "bibli");
 
@@ -7,79 +6,95 @@ if ($conexion->connect_error) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $nombre = $_POST["nombre"];
-    $correo = $_POST["correo"];
-    $telefono = $_POST["telefono"];
-    $fecha_contratacion = $_POST["fecha_contratacion"];
-    $password = password_hash($_POST["password"], PASSWORD_BCRYPT); // Encriptar la contraseña
+    if (isset($_POST["nombre"]) && isset($_POST["correo"]) && isset($_POST["telefono"]) && isset($_POST["fecha_contratacion"]) && isset($_POST["password"])) {
+        $nombre = $conexion->real_escape_string($_POST["nombre"]);
+        $correo = $conexion->real_escape_string($_POST["correo"]);
+        $telefono = $conexion->real_escape_string($_POST["telefono"]);
+        $fecha_contratacion = $conexion->real_escape_string($_POST["fecha_contratacion"]);
+        $password = password_hash($_POST["password"], PASSWORD_BCRYPT);
 
-    $sql = "INSERT INTO Empleados (nombre, correo, telefono, fecha_contratacion, password)
-            VALUES ('$nombre', '$correo', '$telefono', '$fecha_contratacion', '$password')";
+        $sql_check = "SELECT id_empleado FROM Empleados WHERE correo = '$correo'";
+        $resultado_check = $conexion->query($sql_check);
 
-    if ($conexion->query($sql) === TRUE) {
-        echo "Empleado registrado con éxito.";
+        if ($resultado_check->num_rows > 0) {
+            echo "Error: El correo ya está registrado.";
+        } else {
+            $sql = "INSERT INTO Empleados (nombre, correo, telefono, fecha_contratacion, password)
+                    VALUES ('$nombre', '$correo', '$telefono', '$fecha_contratacion', '$password')";
+
+            if ($conexion->query($sql) === TRUE) {
+                // Redirigir al login después del registro exitoso
+                header("Location: login.php");
+                exit(); // Asegura que el script se detenga después de la redirección
+            } else {
+                echo "Error: " . $conexion->error;
+            }
+        }
     } else {
-        echo "Error: " . $conexion->error;
+        echo "Error: Datos del formulario incompletos.";
     }
 }
-
-// Obtener la lista de empleados
-$sql_empleados = "SELECT id_empleado, nombre, correo, telefono, fecha_contratacion FROM Empleados";
-$resultado_empleados = $conexion->query($sql_empleados);
 ?>
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Empleados</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Registrar Usuario</title>
+    <link rel="stylesheet" href="estilos22.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
-<body>
-    <h1>Registrar Empleado</h1>
-    <form method="post" action="empleados.php">
-        <label for="nombre">Nombre:</label>
-        <input type="text" id="nombre" name="nombre" required><br>
 
-        <label for="correo">Correo:</label>
-        <input type="email" id="correo" name="correo" required><br>
+<body id="B1" class="d-flex justify-content-center align-items-center" style="height: 100vh;">
 
-        <label for="telefono">Teléfono:</label>
-        <input type="text" id="telefono" name="telefono"><br>
+    <div id="B2" class="card col-sm-3" style="padding: 20px; box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);">
+        <div class="card-body login-card-body">
+            <h2 class="text-center mb-4"><b>Crear Cuenta</b></h2>
+            <form method="post" action="empleados.php">
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">Nombre:</label>
+                    <input type="text" id="nombre" name="nombre" class="form-control" required>
+                </div>
 
-        <label for="fecha_contratacion">Fecha de Contratación:</label>
-        <input type="date" id="fecha_contratacion" name="fecha_contratacion" required><br>
+                <div class="mb-3">
+                    <label for="correo" class="form-label">Correo:</label>
+                    <input type="email" id="correo" name="correo" class="form-control" required>
+                </div>
 
-        <label for="password">Contraseña:</label>
-        <input type="password" id="password" name="password" required><br>
+                <div class="mb-3">
+                    <label for="telefono" class="form-label">Teléfono:</label>
+                    <input type="text" id="telefono" name="telefono" class="form-control">
+                </div>
 
-        <input type="submit" value="Registrar Empleado">
-    </form>
+                <div class="mb-3">
+                    <label for="fecha_contratacion" class="form-label">Fecha de Contratación:</label>
+                    <input type="date" id="fecha_contratacion" name="fecha_contratacion" class="form-control" required>
+                </div>
 
-    <h2>Lista de Empleados</h2>
-    <table border="1">
-        <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Correo</th>
-            <th>Teléfono</th>
-            <th>Fecha de Contratación</th>
-        </tr>
-        <?php
-        if ($resultado_empleados->num_rows > 0) {
-            while ($fila = $resultado_empleados->fetch_assoc()) {
-                echo "<tr>";
-                echo "<td>" . $fila["id_empleado"] . "</td>";
-                echo "<td>" . $fila["nombre"] . "</td>";
-                echo "<td>" . $fila["correo"] . "</td>";
-                echo "<td>" . $fila["telefono"] . "</td>";
-                echo "<td>" . $fila["fecha_contratacion"] . "</td>";
-                echo "</tr>";
-            }
-        } else {
-            echo "<tr><td colspan='5'>No hay empleados registrados.</td></tr>";
-        }
-        ?>
-    </table>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Contraseña:</label>
+                    <input type="password" id="password" name="password" class="form-control" required>
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Crear Cuenta</button>
+                </div>
+            </form>
+
+            <form action="login.php" class="text-center mt-3">
+                <button type="submit" class="btn btn-secondary">Volver</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+    </script>
+
 </body>
+
 </html>
+    

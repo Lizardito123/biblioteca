@@ -36,24 +36,87 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="es">
+<!doctype html>
+<html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>INICIO</title>
+    <link rel="stylesheet" href="estilos11.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
-<body>
-    <h1>Iniciar Sesión</h1>
-    <?php if (isset($error)) { echo "<p>$error</p>"; } ?>
-    <form method="post" action="login.php">
-        <label for="correo">Correo:</label>
-        <input type="email" id="correo" name="correo" required><br>
 
-        <label for="password">Contraseña:</label>
-        <input type="password" id="password" name="password" required><br>
+<body id="A1">
 
-        <input type="submit" value="Iniciar Sesión">
-    </form>
+    <center>
+
+        <div id="A2" class="card col-sm-3" style="margin-top: 7%;">
+
+            <div class="card-body login-card-body">
+
+                <?php
+if(isset($_GET['error'])){
+    
+
+    
+    echo "<div class='alert alert-danger alert-dismissible'>";
+
+    echo "<h5><i class='icon fas fa-ban'></i> Alert!</h5>";
+    echo $_GET['error'];
+    echo "</div>";
+    } ?>
+
+
+
+
+
+
+
+
+
+
+                <p class="login-box-msg"> <b>INICIO DE SESION</b></p>
+                <form action="" method="post">
+                    <div class="input-group mb-3">
+
+                        <input type="email" name="correo" class="form-control" placeholder="Ingrese su correo" required>
+
+
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="password" name="password" class="form-control" placeholder="Contraseña" required>
+
+                    </div>
+                    <div class="row">
+                        <center>
+                       
+                            
+                            <div class="col-6">
+                                <button type="submit" class="btn btn-primary btn-block">INICIAR SESION</button>
+                            </div>
+
+                        </center>
+                    </div>
+                </form>
+                <form action="empleados.php" method="post">
+                    <div class="social-auth-links text-center mb-3">
+                        <br>
+                        
+                        <button type="submit" class="btn btn-primary btn-block">CREAR CUENTA NUEVA</button>
+
+                    </div>
+
+                </form>
+            </div>
+
+        </div>
+    </center>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+    </script>
 </body>
+
 </html>
