@@ -54,6 +54,12 @@
                 <li class="nav-item">
                     <a class="nav-link" href="historial.php">Historial de Prestamos</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="editar.php">Gestion de Clientes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="edit.php">Gestion de Libros</a>
+                </li>
             </ul>
         </nav>
     </div>
